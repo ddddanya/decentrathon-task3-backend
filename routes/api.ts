@@ -230,6 +230,27 @@ router.get("/getBlocks", async (req: Request, res: Response) => {
   }
 });
 
+router.get("/getValidators", async (req: Request, res: Response) => {
+  try {
+    const validatorsRequest = await fetch(
+      "https://gnfd-testnet-fullnode-tendermint-us.nodereal.io/validators"
+    );
+    const validatorsResponse = await validatorsRequest.json();
+
+    res.json({
+      data: validatorsResponse.result.validators.map((item: any) => ({
+        address: item.address,
+        votingPower: item.voting_power
+      })),
+    });
+  } catch (e) {
+    console.log(e);
+    res.json({
+      error: "Unexpected error",
+    });
+  }
+});
+
 router.get("/getBlock/:block", async (req: Request, res: Response) => {
   try {
     const blockRequest = await fetch(
