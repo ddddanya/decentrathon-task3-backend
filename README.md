@@ -1,4 +1,4 @@
-# Decentrathon Task 3
+# Decentrathon Task 3 Backend
 
 Our team is ready to present the solution to task number 3. We have made every effort to make the project really high quality and production-ready. 
 
