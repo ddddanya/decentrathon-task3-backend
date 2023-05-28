@@ -5,6 +5,7 @@ import Provider from "../models/Provider";
 import measureLatency from "./measureLatency";
 import { rpc } from "../config";
 import Statistics from "../models/Statistics";
+import sendNotification from "./sendNotification";
 
 const client = Client.create(rpc.url, rpc.chainId);
 
@@ -50,9 +51,14 @@ async function sheduleCron() {
         provider.uptime += 60000;
       } else {
         provider.uptime = 0;
+        await sendNotification([item.operatorAddress], item.description?.moniker, "The provider has stopped work.")
       }
 
       provider.latency = latency;
+
+      if (latency > 4000) {
+        await sendNotification([item.operatorAddress], item.description?.moniker, "High latency")
+      }
 
       await provider.save();
 

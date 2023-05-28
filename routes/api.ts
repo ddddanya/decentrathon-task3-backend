@@ -242,9 +242,18 @@ router.get("/getBlock/:block", async (req: Request, res: Response) => {
     );
     const blockTransactionsResponse = await blockTransactionsRequest.json();
 
+    const blockInfoRequest = await fetch(
+      "https://gnfd-testnet-fullnode-tendermint-us.bnbchain.org/block?height=" + req.params.block
+    );
+    const blockInfoResponse = await blockInfoRequest.json();
+
     res.json({
       data: {
         ...blockResponse,
+        signatures: blockInfoResponse.result.block.last_commit.signatures.map((item: any) => ({
+          validator_address: item?.validator_address,
+          timestamp: item?.timestamp
+        })),
         transactions: blockTransactionsResponse.data,
       },
     });
